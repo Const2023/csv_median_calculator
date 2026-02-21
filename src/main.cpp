@@ -22,31 +22,40 @@ int main(int argc, char* argv[])
     
     // 2. Поиск и чтение CSV файлов
     std::vector<fs::path> csv_files;
-    for (const auto& entry : fs::directory_iterator(cfg.input_dir)) 
+    if (fs::exists(cfg.input_dir) && fs::is_directory(cfg.input_dir))
     {
-        if (entry.is_regular_file() && entry.path().extension() == ".csv") 
+        for (const auto& entry : fs::directory_iterator(cfg.input_dir)) 
         {
-            std::string filename = entry.path().stem().string();
-            bool matches_mask = cfg.filename_mask.empty();
+            if (entry.is_regular_file() && entry.path().extension() == ".csv") 
+            {
+                std::string filename = entry.path().stem().string();
+                bool matches_mask = cfg.filename_mask.empty();
             
-            if (!matches_mask) {
-                for (const auto& mask : cfg.filename_mask) 
+                if (!matches_mask) 
                 {
-                    if (filename.find(mask) != std::string::npos) 
+                    for (const auto& mask : cfg.filename_mask) 
                     {
-                        matches_mask = true;
-                        break;
+                        if (filename.find(mask) != std::string::npos) 
+                        {
+                            matches_mask = true;
+                            break;
+                        }
                     }
                 }
-            }
             
-            if (matches_mask) 
-            {
-                csv_files.push_back(entry.path());
-                spdlog::info("Found CSV file: {}", entry.path().string());
+                if (matches_mask) 
+                {
+                    csv_files.push_back(entry.path());
+                    spdlog::info("Found CSV file: {}", entry.path().string());
+                }
             }
         }
     }
+    else
+    {
+        spdlog::warn("Input directory {} does not exist. No files to process.", cfg.input_dir.string());
+    }
+
     
     // 3. Создание выходного файла
     fs::path output_file = cfg.output_dir / "median_history.csv";
