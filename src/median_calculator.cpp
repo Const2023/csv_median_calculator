@@ -23,7 +23,7 @@ void median_calculator::add_price(double price)
     spdlog::debug("Added price: {:.6f}, total: {}", price, _prices.size());
 }
 
-bool median_calculator::update_median(double price) 
+bool median_calculator::update_median(double price, uint64_t receive_ts) 
 {
     std::lock_guard<std::mutex> lock(_mutex);
     
@@ -38,17 +38,13 @@ bool median_calculator::update_median(double price)
     
     if (changed) {
         _current_median = new_median;
-        _median_changed = true;
         
-        // Записываем в файл: timestamp + новая медиана
-        auto now = std::chrono::duration_cast<std::chrono::microseconds>(
-            std::chrono::system_clock::now().time_since_epoch()).count();
-        
-        *_output_stream << now << ";" << std::fixed << std::setprecision(8) << _current_median << "\n";
+        // receive_ts;price_median
+        *_output_stream << receive_ts << ";" 
+                       << std::fixed << std::setprecision(8) << _current_median << "\n";
         _output_stream->flush();
         
-        spdlog::debug("Median changed: {:.6f} -> {:.6f} (total prices: {})", 
-            _current_median, new_median, _prices.size());
+        spdlog::debug("Median changed at ts={} : {:.8f}", receive_ts, _current_median);
     }
     
     return changed;

@@ -19,7 +19,7 @@ public:
     void add_price(double price);
     
     // Вычисляет текущую медиану и возвращает true если она изменилась
-    bool update_median(double price);
+    bool update_median(double price, uint64_t receive_ts);
     
     // Получить текущую медиану
     double get_current_median() const;

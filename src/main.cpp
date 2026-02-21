@@ -36,15 +36,15 @@ int main()
         spdlog::info("=== Calculating running median ===");
         
         // Обрабатываем все цены из level
-        for (const auto& rec : levels) {
-            calc.update_median(rec.price);  // Добавляет цену и проверяет изменение медианы
+        for (const auto& rec : levels) 
+        {
+            calc.update_median(rec.price, rec.receive_ts);  
         }
-        
         // Обрабатываем все цены из trade
-        for (const auto& rec : trades) {
-            calc.update_median(rec.price);
+        for (const auto& rec : trades) 
+        {
+            calc.update_median(rec.price, rec.receive_ts);  
         }
-
         double final_median = calc.get_current_median();
         spdlog::info("=== FINAL RESULT ===");
         spdlog::info("Total prices processed: {}", levels.size() + trades.size());
