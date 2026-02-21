@@ -22,7 +22,13 @@ FetchContent_MakeAvailable(spdlog)
 
 
 # Приложение
-add_executable(csv_median_calculator src/main.cpp src/csv_reader.hpp src/csv_reader.cpp)
+add_executable(
+    csv_median_calculator 
+    src/main.cpp src/csv_reader.hpp 
+    src/csv_reader.cpp
+    src/median_calculator.hpp
+    src/median_calculator.cpp
+    )
 target_link_libraries(csv_median_calculator PRIVATE
     boost_headers
     tomlplusplus::tomlplusplus
