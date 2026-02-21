@@ -18,6 +18,8 @@ FetchContent_Declare(tomlplusplus GIT_REPOSITORY https://github.com/marzer/tomlp
 FetchContent_MakeAvailable(tomlplusplus)
 FetchContent_Declare(spdlog GIT_REPOSITORY https://github.com/gabime/spdlog.git GIT_TAG v1.14.1)
 FetchContent_MakeAvailable(spdlog)
+FetchContent_Declare(fmt GIT_REPOSITORY https://github.com/fmtlib/fmt.git GIT_TAG 11.0.2)
+FetchContent_MakeAvailable(fmt)
 
 
 
@@ -28,11 +30,15 @@ add_executable(
     src/csv_reader.cpp
     src/median_calculator.hpp
     src/median_calculator.cpp
+    src/config_parser.hpp
+    src/config_parser.cpp
     )
 target_link_libraries(csv_median_calculator PRIVATE
     boost_headers
     tomlplusplus::tomlplusplus
     spdlog::spdlog
+    fmt::fmt
+    Boost::program_options
 )
 
 message(STATUS "boost_SOURCE_DIR = ${boost_SOURCE_DIR}")

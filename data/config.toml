@@ -1,0 +1,4 @@
+[main]
+input = "data"
+output = "output"
+filename_mask = ['level', 'trade']
